@@ -58,11 +58,7 @@ func main() {
 	awsSecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
 	awsSQSRegion := os.Getenv("AWS_SQS_REGION")
 	trancodedVideosBucket := os.Getenv("AWS_S3_TRANSCODED_VIDEOS")
-
-	// jobQueueUser := os.Getenv("JOB_QUEUE_USER")
-	// jobQueuePassword := os.Getenv("JOB_QUEUE_PASSWORD")
-	// jobQueueEc2IP := os.Getenv("JOB_QUEUE_EC2_IP")
-	// jobQueuePORT := os.Getenv("JOB_QUEUE_PORT")
+	// sqsQueryUrl := os.Getenv("SQS_QUERYURL")
 
 	//configs
 	config := aws.Config{
@@ -80,6 +76,7 @@ func main() {
 			Config: config,
 		},
 	))
+
 	//download video from s3-1
 	s3Client := s3.New(sess)
 	bucket := "" //get this from env
@@ -90,26 +87,33 @@ func main() {
 	}
 
 	// ffmpeg video transcoding
-	cmd := exec.Command("ffmpeg", "-i", key, "-b:v", "13000k", "13000-3.mp4")
+	cmd := exec.Command("ffmpeg", "-i", key, "-b:v", "13000k", "13000.mp4")
 	err = cmd.Run()
 	if err != nil {
 		log.Fatalf("%s", err.Error())
 	}
-	// delete file from s3-1
-	decodedKey, err := url.QueryUnescape(key)
-	if err != nil {
-		log.Fatalf("error decording key: %s", err.Error())
-	}
-	deleteObjectInput := &s3.DeleteObjectInput{
-		Bucket: &bucket,
-		Key:    &decodedKey,
-	}
-	_, err = s3Client.DeleteObject(deleteObjectInput)
-	if err != nil {
-		log.Println("Could not delete the object from s3-2")
-	}
+
+	//sqs
+	// sqsClient := sqs.New(sess)
+	// sqsDeleteMsgInput := sqs.DeleteMessageInput{
+	// 	QueueUrl:      &sqsQueryUrl,
+	// 	ReceiptHandle: aws.String(""),
+	// }
+	// // delete file from s3-1
+	// decodedKey, err := url.QueryUnescape(key)
+	// if err != nil {
+	// 	log.Fatalf("error decording key: %s", err.Error())
+	// }
+	// deleteObjectInput := &s3.DeleteObjectInput{
+	// 	Bucket: &bucket,
+	// 	Key:    &decodedKey,
+	// }
+	// _, err = s3Client.DeleteObject(deleteObjectInput)
+	// if err != nil {
+	// 	log.Println("Could not delete the object from s3-2")
+	// }
 	// upload file to s3-2
-	file, err := os.Open("13000-3.mp4") //name from ffmpeg command
+	file, err := os.Open("13000.mp4") //name from ffmpeg command
 	if err != nil {
 		log.Fatalf("could not open the transcoded file to upload")
 	}
