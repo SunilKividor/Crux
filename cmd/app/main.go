@@ -8,44 +8,44 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/SunilKividor/video-transcoding/crux/internal/config"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/joho/godotenv"
 )
 
-type S3Event struct {
-	Records []Records `json:"Records"`
-}
+// type S3Event struct {
+// 	Records []Records `json:"Records"`
+// }
 
-type Records struct {
-	S3Events S3 `json:"s3"`
-}
+// type Records struct {
+// 	S3Events S3 `json:"s3"`
+// }
 
-type S3 struct {
-	SchemaVersion   string   `json:"s3SchemaVersion"`
-	ConfigurationId string   `json:"configurationId"`
-	Bucket          S3Bucket `json:"bucket"`
-	Object          S3Object `json:"object"`
-}
+// type S3 struct {
+// 	SchemaVersion   string   `json:"s3SchemaVersion"`
+// 	ConfigurationId string   `json:"configurationId"`
+// 	Bucket          S3Bucket `json:"bucket"`
+// 	Object          S3Object `json:"object"`
+// }
 
-type S3Bucket struct {
-	Name string `json:"name"`
-	ARN  string `json:"arn"`
-}
+// type S3Bucket struct {
+// 	Name string `json:"name"`
+// 	ARN  string `json:"arn"`
+// }
 
-type S3Object struct {
-	Key       string `json:"key"`
-	Size      int    `json:"size"`
-	ETag      string `json:"eTag"`
-	Sequencer string `json:"sequencer"`
-}
+// type S3Object struct {
+// 	Key       string `json:"key"`
+// 	Size      int    `json:"size"`
+// 	ETag      string `json:"eTag"`
+// 	Sequencer string `json:"sequencer"`
+// }
 
-type PublishingMessage struct {
-	BucketName string `json:"bucket_name"`
-	Key        string `json:"key"`
-}
+// type PublishingMessage struct {
+// 	BucketName string `json:"bucket_name"`
+// 	Key        string `json:"key"`
+// }
 
 func init() {
 	if err := godotenv.Load(); err != nil {
@@ -54,26 +54,11 @@ func init() {
 }
 
 func main() {
-	awsAccessKey := os.Getenv("AWS_ACCESS_KEY_ID")
-	awsSecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-	awsSQSRegion := os.Getenv("AWS_SQS_REGION")
-	trancodedVideosBucket := os.Getenv("AWS_S3_TRANSCODED_VIDEOS")
-	// sqsQueryUrl := os.Getenv("SQS_QUERYURL")
-
-	//configs
-	config := aws.Config{
-		Credentials: credentials.NewStaticCredentials(
-			awsAccessKey,
-			awsSecretAccessKey,
-			"",
-		),
-		Region: &awsSQSRegion,
-	}
-
-	//session
+	awsConfigModel := config.NewAwsConfigModel()
+	awsConfig := awsConfigModel.NewAwsConfig()
 	sess := session.Must(session.NewSessionWithOptions(
 		session.Options{
-			Config: config,
+			Config: awsConfig,
 		},
 	))
 
