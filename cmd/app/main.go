@@ -112,6 +112,7 @@ func main() {
 	// if err != nil {
 	// 	log.Println("Could not delete the object from s3-2")
 	// }
+
 	// upload file to s3-2
 	file, err := os.Open("13000.mp4") //name from ffmpeg command
 	if err != nil {
