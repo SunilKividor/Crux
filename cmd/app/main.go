@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/SunilKividor/video-transcoding/crux/internal/config"
-	"github.com/SunilKividor/video-transcoding/crux/internal/services/ffmpeg"
-	s3_service "github.com/SunilKividor/video-transcoding/crux/internal/services/s3"
-	"github.com/SunilKividor/video-transcoding/crux/pks/utils"
+	"github.com/SunilKividor/Cruc/internal/config"
+	"github.com/SunilKividor/Cruc/internal/services/ffmpeg"
+	s3_service "github.com/SunilKividor/Cruc/internal/services/s3"
+	"github.com/SunilKividor/Cruc/pks/utils"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/joho/godotenv"
