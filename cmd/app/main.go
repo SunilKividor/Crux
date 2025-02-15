@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/SunilKividor/Cruc/internal/config"
 	"github.com/SunilKividor/Cruc/internal/services/ffmpeg"
@@ -13,7 +14,7 @@ import (
 )
 
 func init() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Could not load .env")
 	}
 }
@@ -30,8 +31,8 @@ func main() {
 
 	//download video from s3-1
 	s3Client := s3.New(sess)
-	bucket := "" //get this from env
-	key := ""    //get this from env
+	bucket := os.Getenv("bucket") //get this from env
+	key := os.Getenv("key")       //get this from env
 	s3Service := s3_service.NewS3Service(sess)
 	err := s3Service.DownloadFromS3(s3Client, bucket, key)
 	utils.FailOnError(err, "Error downloading from s3")
