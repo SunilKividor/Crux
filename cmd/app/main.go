@@ -6,7 +6,7 @@ import (
 	"github.com/SunilKividor/Cruc/internal/config"
 	"github.com/SunilKividor/Cruc/internal/services/ffmpeg"
 	s3_service "github.com/SunilKividor/Cruc/internal/services/s3"
-	"github.com/SunilKividor/Cruc/pks/utils"
+	"github.com/SunilKividor/Cruc/pkg/utils"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/joho/godotenv"
@@ -40,6 +40,10 @@ func main() {
 	err = ffmpeg.VideoTranscoder(key)
 	utils.FailOnError(err, "Error transcoding video")
 
+	// upload file to s3-2
+	err = s3Service.UploadToS3(s3Client)
+	utils.FailOnError(err, "error uploading file to bucket")
+
 	//sqs
 	// sqsClient := sqs.New(sess)
 	// sqsDeleteMsgInput := sqs.DeleteMessageInput{
@@ -59,8 +63,4 @@ func main() {
 	// if err != nil {
 	// 	log.Println("Could not delete the object from s3-2")
 	// }
-
-	// upload file to s3-2
-	err = s3Service.UploadToS3(s3Client)
-	utils.FailOnError(err, "error uploading file to bucket")
 }
