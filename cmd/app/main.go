@@ -43,7 +43,11 @@ func main() {
 
 	// upload file to s3-2
 	err = s3Service.UploadToS3(s3Client)
-	utils.FailOnError(err, "error uploading file to bucket")
+	utils.FailOnError(err, "Error uploading file to bucket")
+
+	//cleanup (removing the local downloaded video file) //getting error check this
+	err = utils.DeleteLocalVidoeFile(key)
+	utils.FailOnErrorWithoutPanic(err, "Error deleting local file")
 
 	//sqs
 	// sqsClient := sqs.New(sess)
