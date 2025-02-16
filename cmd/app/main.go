@@ -48,24 +48,4 @@ func main() {
 	//cleanup (removing the local downloaded video file) //getting error check this
 	err = utils.DeleteLocalVidoeFile(key)
 	utils.FailOnErrorWithoutPanic(err, "Error deleting local file")
-
-	//sqs
-	// sqsClient := sqs.New(sess)
-	// sqsDeleteMsgInput := sqs.DeleteMessageInput{
-	// 	QueueUrl:      &sqsQueryUrl,
-	// 	ReceiptHandle: aws.String(""),
-	// }
-	// // delete file from s3-1
-	// decodedKey, err := url.QueryUnescape(key)
-	// if err != nil {
-	// 	log.Fatalf("error decording key: %s", err.Error())
-	// }
-	// deleteObjectInput := &s3.DeleteObjectInput{
-	// 	Bucket: &bucket,
-	// 	Key:    &decodedKey,
-	// }
-	// _, err = s3Client.DeleteObject(deleteObjectInput)
-	// if err != nil {
-	// 	log.Println("Could not delete the object from s3-2")
-	// }
 }
