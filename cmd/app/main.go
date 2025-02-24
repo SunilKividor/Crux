@@ -47,5 +47,5 @@ func main() {
 
 	//cleanup (removing the local downloaded video file) //getting error check this
 	err = utils.DeleteLocalVidoeFile(key)
-	utils.FailOnErrorWithoutPanic(err, "Error deleting local file")
+	utils.FailOnError(err, "Error deleting local file")
 }
